@@ -7,8 +7,8 @@ import { cn, formatDate, semesterNow } from "@/lib/utils";
 
 const STATUS_TONE = { pending: "gold", approved: "green", rejected: "red" } as const;
 
-export function TransfersSection({ user }: { user: User }) {
-  const db = readDb();
+export async function TransfersSection({ user }: { user: User }) {
+  const db = await readDb();
   const semester = semesterNow();
   const allocation = activeAllocation(db, user.id, semester);
   const currentHostel = allocation ? hostelById(db, allocation.hostelId) : undefined;
@@ -127,8 +127,8 @@ export function TransfersSection({ user }: { user: User }) {
 
 /* ------------------------------------------------------------ admin view */
 
-export function TransfersAdminSection() {
-  const db = readDb();
+export async function TransfersAdminSection() {
+  const db = await readDb();
   const pending = db.transfers
     .filter((t) => t.status === "pending")
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt));

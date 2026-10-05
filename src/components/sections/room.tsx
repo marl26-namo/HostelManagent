@@ -20,8 +20,8 @@ const STATUS_LABEL = {
   "checked-out": "Checked out",
 } as const;
 
-export function RoomSection({ user }: { user: User }) {
-  const db = readDb();
+export async function RoomSection({ user }: { user: User }) {
+  const db = await readDb();
   const semester = semesterNow();
   const allocation = activeAllocation(db, user.id, semester);
 
@@ -140,8 +140,8 @@ export function RoomSection({ user }: { user: User }) {
 
 /* ------------------------------------------------------------ admin view */
 
-export function RoomsSection() {
-  const db = readDb();
+export async function RoomsSection() {
+  const db = await readDb();
   const totalBeds = db.rooms.reduce((n, r) => n + r.beds.length, 0);
   const occupied = db.rooms.reduce(
     (n, r) => n + r.beds.filter((b) => b.occupantId !== null).length,

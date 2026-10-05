@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Administration" };
 
 export default async function AdminDashboard() {
   const user = await requireRole(["admin"]);
-  const db = readDb();
+  const db = await readDb();
   const semester = semesterNow();
 
   const totalBeds = db.rooms.reduce((n, r) => n + r.beds.length, 0);

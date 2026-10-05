@@ -170,6 +170,18 @@ function svgPhoto(label: string, from: string, to: string): string {
   return `data:image/svg+xml;base64,${Buffer.from(svg).toString("base64")}`;
 }
 
+/** Amenities shown as chips on hostel cards and the detail view. */
+const AMENITIES: Record<string, string[]> = {
+  nyika: ["Security", "Wi-Fi", "Laundry", "Study room"],
+  mpingwe: ["Security", "Wi-Fi", "Laundry", "Quiet block"],
+  "ndirande-a": ["Security", "Wi-Fi", "Study room", "Cafeteria"],
+  hyrid: ["Security", "Wi-Fi", "Laundry", "Clinic nearby"],
+  kapeni: ["Security", "Wi-Fi", "Laundry", "Mentorship"],
+  "ndirande-b": ["Security", "Wi-Fi", "Laundry", "Study room"],
+  chichiri: ["Security", "Wi-Fi", "Laundry", "Shuttle stop"],
+  "poly-alley": ["Security", "Wi-Fi", "Laundry", "Workshop nearby"],
+};
+
 export function buildSeed(): Db {
   const users: User[] = [
     ...STUDENTS.map((s, index) => ({
@@ -340,7 +352,11 @@ export function buildSeed(): Db {
 
   return {
     users,
-    hostels: HOSTELS,
+    hostels: HOSTELS.map((hostel, index) => ({
+      ...hostel,
+      amenities: AMENITIES[hostel.id] ?? [],
+      rating: 4 + (index % 2),
+    })),
     rooms,
     applications,
     allocations,

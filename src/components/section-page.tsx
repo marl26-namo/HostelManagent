@@ -9,7 +9,9 @@ import { TransfersSection, TransfersAdminSection } from "@/components/sections/t
 import { ComplaintsSection, ComplaintsAdminSection } from "@/components/sections/complaints";
 import { LostFoundSection, LostFoundAdminSection } from "@/components/sections/lost-found";
 import { CheckinsSection } from "@/components/sections/checkins";
+import { CheckinPassSection } from "@/components/sections/checkin-pass";
 import { InspectionsSection } from "@/components/sections/inspections";
+import { StudentsAdminSection } from "@/components/sections/students";
 import type { User } from "@/lib/types";
 
 interface Header {
@@ -62,6 +64,18 @@ const SECTIONS: Record<string, Header> = {
     student: "lost-found",
     admin: "lost-found",
   },
+  checkin: {
+    title: "Check-in pass",
+    subtitle: "Your QR gate pass, residency status and every scan recorded against it.",
+    student: "checkin",
+    admin: "checkin",
+  },
+  students: {
+    title: "Student accounts",
+    subtitle: "Issue portal logins for students — there is no public sign-up.",
+    student: "room",
+    admin: "students",
+  },
   checkins: {
     title: "Gate console",
     subtitle: "Scan QR key cards to record arrivals and departures, with a full gate log.",
@@ -76,8 +90,9 @@ const SECTIONS: Record<string, Header> = {
   },
 };
 
-const STUDENT_KEYS = ["booking", "room", "payments", "maintenance", "transfers", "complaints", "lost-found"];
+const STUDENT_KEYS = ["booking", "room", "checkin", "payments", "maintenance", "transfers", "complaints", "lost-found"];
 const ADMIN_KEYS = [
+  "students",
   "applications",
   "rooms",
   "checkins",
@@ -120,6 +135,10 @@ function renderSection(key: string, user: User) {
       return isAdmin ? <ComplaintsAdminSection /> : <ComplaintsSection />;
     case "lost-found":
       return isAdmin ? <LostFoundAdminSection /> : <LostFoundSection user={user} />;
+    case "checkin":
+      return isAdmin ? null : <CheckinPassSection user={user} />;
+    case "students":
+      return isAdmin ? <StudentsAdminSection /> : null;
     case "checkins":
       return <CheckinsSection />;
     case "inspections":

@@ -6,12 +6,12 @@ import { cn, formatDate } from "@/lib/utils";
 
 const KIND_TONE = { lost: "red", found: "green" } as const;
 
-function LostFoundList({
+async function LostFoundList({
   admin = false,
 }: {
   admin?: boolean;
 }) {
-  const db = readDb();
+  const db = await readDb();
   const items = [...db.lostFound].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
   if (items.length === 0) {
@@ -158,8 +158,8 @@ export function LostFoundSection({ user }: { user: User }) {
   );
 }
 
-export function LostFoundAdminSection() {
-  const db = readDb();
+export async function LostFoundAdminSection() {
+  const db = await readDb();
   const open = db.lostFound.filter((i) => i.status === "open").length;
 
   return (

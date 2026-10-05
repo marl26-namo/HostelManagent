@@ -4,8 +4,8 @@ import { readDb } from "@/lib/db";
 import { checkInState, hostelById, roomById, userName } from "@/lib/queries";
 import { formatDateTime, timeOnly } from "@/lib/utils";
 
-export function CheckinsSection() {
-  const db = readDb();
+export async function CheckinsSection() {
+  const db = await readDb();
 
   const placements = db.allocations
     .map((allocation) => {

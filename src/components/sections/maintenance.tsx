@@ -48,8 +48,8 @@ function RoomPhotoGrid({ photos }: { photos: string[] }) {
   );
 }
 
-export function MaintenanceSection({ user }: { user: User }) {
-  const db = readDb();
+export async function MaintenanceSection({ user }: { user: User }) {
+  const db = await readDb();
   const allocation = activeAllocation(db, user.id, semesterNow());
   const defaultRoomId = allocation?.roomId ?? "";
   const tickets = [...db.tickets].sort(
@@ -220,8 +220,8 @@ export function MaintenanceSection({ user }: { user: User }) {
 
 /* ------------------------------------------------------------ admin view */
 
-export function MaintenanceAdminSection() {
-  const db = readDb();
+export async function MaintenanceAdminSection() {
+  const db = await readDb();
   const tickets = [...db.tickets].sort(
     (a, b) =>
       (a.status === "resolved" ? 1 : 0) - (b.status === "resolved" ? 1 : 0) ||

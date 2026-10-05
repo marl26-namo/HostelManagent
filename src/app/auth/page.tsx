@@ -8,12 +8,11 @@ export const metadata: Metadata = {
 export default async function AuthPage({
   searchParams,
 }: {
-  searchParams: Promise<{ returnTo?: string; mode?: string }>;
+  searchParams: Promise<{ returnTo?: string }>;
 }) {
   const params = await searchParams;
   const rawReturn = params.returnTo ?? "";
   const returnTo = rawReturn.startsWith("/") && !rawReturn.startsWith("//") ? rawReturn : "/dashboard";
-  const initialMode = params.mode === "signup" ? "signup" : "signin";
 
-  return <AuthForm returnTo={returnTo} initialMode={initialMode} />;
+  return <AuthForm returnTo={returnTo} />;
 }
