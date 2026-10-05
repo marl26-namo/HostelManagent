@@ -23,6 +23,10 @@ export interface Hostel {
   location: string;
   description: string;
   monthlyFee: number;
+  /** Short selling points rendered as chips on the hostel detail screen. */
+  amenities?: string[];
+  photoUrl?: string;
+  rating?: number;
 }
 
 export interface Bed {
@@ -35,6 +39,7 @@ export interface Room {
   id: string;
   hostelId: string;
   number: string;
+  floor?: string;
   beds: Bed[];
 }
 
@@ -48,7 +53,10 @@ export interface Application {
   status: ApplicationStatus;
   createdAt: string;
   note?: string;
+  decidedAt?: string;
 }
+
+export type AllocationStatus = "active" | "checked-out" | "released";
 
 export interface Allocation {
   id: string;
@@ -61,6 +69,7 @@ export interface Allocation {
   checkedInAt: string | null;
   checkedOutAt: string | null;
   createdAt: string;
+  status?: AllocationStatus;
 }
 
 export type PaymentMethod = "airtel-money" | "tnm-mpamba" | "bank-transfer";
@@ -116,6 +125,7 @@ export interface NoiseComplaint {
   description: string;
   status: "new" | "acknowledged" | "resolved";
   createdAt: string;
+  resolvedAt?: string;
 }
 
 export interface LostFoundItem {

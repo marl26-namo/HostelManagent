@@ -47,17 +47,40 @@ await step("landing page renders", async () => {
   );
 });
 
-/* -------------------------------------------------------- student sign-up */
-await step("student can create an account", async () => {
+/* --------------------------------------- admin issues the student account */
+const studentPassword = "mubas2026";
+await step("admin issues a student portal account", async () => {
   await page.goto(`${BASE}/auth`, { waitUntil: "load" });
-  await page.getByRole("button", { name: "Create account" }).click();
+  await page.locator('button:has-text("Hostel administrator")').click();
+  await page.locator('form button[type="submit"]').click();
+  await page.waitForURL("**/admin");
+  check("admin signs in to the admin portal", page.url().endsWith("/admin"));
+
+  await page.getByRole("link", { name: "Students", exact: true }).click();
+  await page.waitForURL("**/admin/students");
   await page.fill("#name", "Smoke Tester");
   await page.fill("#regNumber", regNumber);
-  await page.fill("#signup-email", studentEmail);
-  await page.fill("#signup-password", "smoke123");
+  await page.fill("#accountEmail", studentEmail);
+  await page.fill("#password", studentPassword);
+  await page.getByRole("button", { name: "Create student account" }).click();
+  await page.getByText(/Account created for Smoke Tester/).waitFor();
+  check("admin created the student portal login", true);
+
+  await page.goto(`${BASE}/auth`, { waitUntil: "load" });
+  check(
+    "no public sign-up on the login page",
+    (await page.getByRole("button", { name: "Create account" }).count()) === 0,
+  );
+});
+
+/* --------------------------------------- student signs in with that account */
+await step("student signs in with the issued account", async () => {
+  await page.goto(`${BASE}/auth`, { waitUntil: "load" });
+  await page.fill("#email", studentEmail);
+  await page.fill("#password", studentPassword);
   await page.locator('form button[type="submit"]').click();
   await page.waitForURL("**/dashboard");
-  check("signup redirects to student dashboard", page.url().endsWith("/dashboard"));
+  check("issued account opens the student portal", page.url().endsWith("/dashboard"));
   const heading = await page.locator("h1").first().innerText();
   check("dashboard greets the student", heading.includes("Karibuni"), heading);
 });
@@ -76,7 +99,7 @@ await step("student can apply for a bed", async () => {
 
 /* --------------------------------------------------------------- payments */
 await step("payment issues a tracked receipt", async () => {
-  await page.getByRole("link", { name: "Payments & receipts" }).click();
+  await page.getByRole("link", { name: "Payments", exact: true }).click();
   await page.waitForURL("**/dashboard/payments");
   await page.fill("#payerPhone", "0991234567");
   await page.getByRole("button", { name: "Pay & issue receipt" }).click();
@@ -134,7 +157,7 @@ await step("anonymous complaint and lost & found post", async () => {
 /* ------------------------------------------------------------ QR key card */
 let qrPayload = "";
 await step("room page shows QR key card", async () => {
-  await page.getByRole("link", { name: "My room & key card" }).click();
+  await page.getByRole("link", { name: "My room & bed", exact: true }).click();
   await page.waitForURL("**/dashboard/room");
   // Not allocated yet -> prompt to apply
   const hasQr = (await page.locator('img[src^="data:image/png"]').count()) > 0;
@@ -144,6 +167,16 @@ await step("room page shows QR key card", async () => {
   } else {
     check("QR key card rendered", true);
   }
+});
+
+/* -------------------------------------------------------- check-in mobile tab */
+await step("student check-in tab shows the gate pass", async () => {
+  await page.getByRole("link", { name: "Check-in", exact: true }).click();
+  await page.waitForURL("**/dashboard/checkin");
+  check(
+    "check-in tab asks an unallocated student to apply",
+    await page.getByText("No bed allocated yet").isVisible(),
+  );
 });
 
 /* ----------------------------------------------------------- admin sign-in */
@@ -201,10 +234,10 @@ await step("student key card payload scans successfully", async () => {
   await page.waitForURL(`${BASE}/`);
   await page.goto(`${BASE}/auth`, { waitUntil: "load" });
   await page.fill("#email", studentEmail);
-  await page.fill("#password", "smoke123");
+  await page.fill("#password", studentPassword);
   await page.locator('form button[type="submit"]').click();
   await page.waitForURL("**/dashboard");
-  await page.getByRole("link", { name: "My room & key card" }).click();
+  await page.getByRole("link", { name: "My room & bed", exact: true }).click();
   await page.waitForURL("**/dashboard/room");
   await page.locator('img[src^="data:image/png"]').first().waitFor();
   check("allocated student sees QR key card", true);
@@ -248,7 +281,7 @@ await step("student requests a transfer", async () => {
   await page.waitForURL(`${BASE}/`);
   await page.goto(`${BASE}/auth`, { waitUntil: "load" });
   await page.fill("#email", studentEmail);
-  await page.fill("#password", "smoke123");
+  await page.fill("#password", studentPassword);
   await page.locator('form button[type="submit"]').click();
   await page.waitForURL("**/dashboard");
   await page.getByRole("link", { name: "Room transfer" }).click();

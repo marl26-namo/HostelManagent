@@ -2,12 +2,14 @@ import { getSessionUser } from "@/lib/auth";
 import { AuthGate } from "@/components/auth-gate";
 import { Sidebar, type NavItem } from "@/components/nav";
 
+// Order matters: the first five entries become the mobile bottom tab bar.
 const STUDENT_NAV: NavItem[] = [
   { href: "/dashboard", label: "Overview", icon: "overview", exact: true },
-  { href: "/dashboard/booking", label: "Book a room", icon: "bed" },
-  { href: "/dashboard/room", label: "My room & key card", icon: "key" },
-  { href: "/dashboard/payments", label: "Payments & receipts", icon: "wallet" },
+  { href: "/dashboard/room", label: "My room & bed", icon: "bed" },
+  { href: "/dashboard/checkin", label: "Check-in", icon: "scan" },
+  { href: "/dashboard/payments", label: "Payments", icon: "wallet" },
   { href: "/dashboard/maintenance", label: "Maintenance", icon: "wrench" },
+  { href: "/dashboard/booking", label: "Book a room", icon: "key" },
   { href: "/dashboard/transfers", label: "Room transfer", icon: "swap" },
   { href: "/dashboard/complaints", label: "Noise complaints", icon: "bell" },
   { href: "/dashboard/lost-found", label: "Lost & found", icon: "box" },
@@ -15,6 +17,7 @@ const STUDENT_NAV: NavItem[] = [
 
 const ADMIN_NAV: NavItem[] = [
   { href: "/admin", label: "Overview", icon: "overview", exact: true },
+  { href: "/admin/students", label: "Students", icon: "users" },
   { href: "/admin/applications", label: "Applications", icon: "list" },
   { href: "/admin/rooms", label: "Rooms & occupancy", icon: "rooms" },
   { href: "/admin/checkins", label: "Gate console", icon: "scan" },

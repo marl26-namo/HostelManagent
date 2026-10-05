@@ -12,8 +12,8 @@ const CONDITIONS = [
 
 const CONDITION_TONE = { good: "green", fair: "gold", poor: "red" } as const;
 
-export function InspectionsSection() {
-  const db = readDb();
+export async function InspectionsSection() {
+  const db = await readDb();
   const inspections = [...db.inspections].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
   return (

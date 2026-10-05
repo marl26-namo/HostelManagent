@@ -18,8 +18,8 @@ import { cn, formatDate, money, semesterNow } from "@/lib/utils";
 
 /* ------------------------------------------------------------ student view */
 
-export function BookingSection({ user }: { user: User }) {
-  const db = readDb();
+export async function BookingSection({ user }: { user: User }) {
+  const db = await readDb();
   const semester = semesterNow();
   const allocation = activeAllocation(db, user.id, semester);
   const myApplications = db.applications
@@ -145,8 +145,8 @@ export function BookingSection({ user }: { user: User }) {
 
 /* ------------------------------------------------------------ admin view */
 
-export function ApplicationsSection() {
-  const db = readDb();
+export async function ApplicationsSection() {
+  const db = await readDb();
   const pending = db.applications
     .filter((a) => a.status === "pending")
     .sort((a, b) => a.createdAt.localeCompare(b.createdAt));

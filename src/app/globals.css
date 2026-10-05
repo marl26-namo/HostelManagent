@@ -1,31 +1,43 @@
 @import "tailwindcss";
 
+/**
+ * Design tokens.
+ *
+ * Mobile-first hotel-booking palette: deep navy surfaces, warm cream backgrounds
+ * and an amber accent for prices, ratings and highlights. Component classes
+ * (ink / forest / gold / cream / clay) keep their existing names so every screen
+ * picks up the new palette without churn.
+ */
 @theme {
   --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
 
-  --color-ink-950: #05130f;
-  --color-ink-900: #071713;
-  --color-ink-800: #0d2a22;
-  --color-ink-700: #16443a;
+  /* Deep navy scale */
+  --color-ink-950: #04081a;
+  --color-ink-900: #0a1330;
+  --color-ink-800: #121d42;
+  --color-ink-700: #1c2a58;
 
-  --color-forest-700: #0f3d30;
-  --color-forest-600: #155a45;
-  --color-moss-500: #1f7a5c;
+  /* Primary action navy */
+  --color-forest-700: #16255c;
+  --color-forest-600: #1e3178;
+  --color-moss-500: #2c4ba0;
 
-  --color-gold-600: #a8761a;
-  --color-gold-500: #e3a72f;
-  --color-gold-400: #f0b951;
-  --color-gold-300: #f7d089;
+  /* Amber accent: prices, stars, highlights */
+  --color-gold-600: #b45309;
+  --color-gold-500: #f59e0b;
+  --color-gold-400: #fbbf24;
+  --color-gold-300: #fcd34d;
 
-  --color-cream-50: #faf7f0;
-  --color-cream-100: #f4efe3;
-  --color-cream-200: #ebe3d2;
-  --color-cream-300: #ddd2ba;
+  /* Warm off-white surfaces */
+  --color-cream-50: #fdfcfa;
+  --color-cream-100: #f8f5ef;
+  --color-cream-200: #f0ebe1;
+  --color-cream-300: #e3dccd;
 
-  --color-clay-500: #b4552f;
-  --color-clay-600: #8f3f1f;
+  --color-clay-500: #c2410c;
+  --color-clay-600: #9a3412;
 }
 
 @layer base {
@@ -48,38 +60,51 @@
   h4 {
     font-family: var(--font-display);
     font-weight: 600;
+    letter-spacing: -0.01em;
   }
 
   ::selection {
     background: var(--color-gold-500);
     color: var(--color-ink-900);
   }
+
+  /* Mobile-first: keep content clear of the fixed bottom navigation. */
+  @media (max-width: 1023px) {
+    body {
+      padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+    }
+  }
 }
 
 .grid-lines-dark {
   background-image:
-    linear-gradient(rgba(250, 247, 240, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(250, 247, 240, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(253, 252, 250, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(253, 252, 250, 0.05) 1px, transparent 1px);
   background-size: 56px 56px;
 }
 
 .grid-lines-light {
   background-image:
-    linear-gradient(rgba(7, 23, 19, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(7, 23, 19, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(10, 19, 48, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10, 19, 48, 0.05) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
 .glow-gold {
-  background: radial-gradient(55% 55% at 50% 0%, rgba(227, 167, 47, 0.3), transparent 72%);
+  background: radial-gradient(55% 55% at 50% 0%, rgba(245, 158, 11, 0.28), transparent 72%);
 }
 
 .glow-moss {
-  background: radial-gradient(50% 50% at 80% 20%, rgba(31, 122, 92, 0.35), transparent 70%);
+  background: radial-gradient(50% 50% at 80% 20%, rgba(44, 75, 160, 0.35), transparent 70%);
 }
 
 .rule-gold {
   background: linear-gradient(90deg, var(--color-gold-500), transparent);
+}
+
+/* Card media block used by the hostel cards on mobile and desktop. */
+.media-card {
+  background: linear-gradient(135deg, #16255c, #0a1330);
 }
 
 @media print {
@@ -89,5 +114,6 @@
 
   body {
     background: #ffffff;
+    padding-bottom: 0;
   }
 }

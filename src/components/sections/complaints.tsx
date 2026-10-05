@@ -6,8 +6,8 @@ import { cn, formatDate } from "@/lib/utils";
 
 const STATUS_TONE = { new: "gold", acknowledged: "neutral", resolved: "green" } as const;
 
-export function ComplaintsSection() {
-  const db = readDb();
+export async function ComplaintsSection() {
+  const db = await readDb();
   const complaints = [...db.complaints].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
   return (
@@ -114,8 +114,8 @@ export function ComplaintsSection() {
   );
 }
 
-export function ComplaintsAdminSection() {
-  const db = readDb();
+export async function ComplaintsAdminSection() {
+  const db = await readDb();
   const complaints = [...db.complaints].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const count = (status: string) => db.complaints.filter((c) => c.status === status).length;
 

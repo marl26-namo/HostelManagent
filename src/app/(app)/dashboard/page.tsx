@@ -21,7 +21,7 @@ const STATUS_TEXT = {
 
 export default async function StudentDashboard() {
   const user = await requireRole(["student"]);
-  const db = readDb();
+  const db = await readDb();
   const semester = semesterNow();
   const firstName = user.name.split(" ")[0];
 

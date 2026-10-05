@@ -73,6 +73,13 @@ function Icon({ name }: { name: string }) {
         <path d="M3.5 7.5 12 12l8.5-4.5M12 12v9" {...S} />
       </>
     ),
+    users: (
+      <>
+        <circle cx="9" cy="8" r="3.2" {...S} />
+        <path d="M3.5 19.5a5.5 5.5 0 0 1 11 0" {...S} />
+        <path d="M16 5.5a3 3 0 0 1 0 5.6M17.5 14.4a5.5 5.5 0 0 1 3 5.1" {...S} />
+      </>
+    ),
     list: (
       <>
         <path d="M8 6h13M8 12h13M8 18h13" {...S} />
@@ -153,6 +160,11 @@ export function Sidebar({
   const isActive = (item: NavItem) =>
     item.exact ? pathname === item.href : pathname === item.href || pathname.startsWith(`${item.href}/`);
 
+  // Mobile-first: five destinations in the bottom tab bar, the rest stay reachable
+  // from the scrollable chip row in the mobile header.
+  const primary = items.slice(0, 5);
+  const overflow = items.slice(5);
+
   return (
     <>
       <aside className="no-print sticky top-0 hidden h-screen w-[264px] shrink-0 flex-col bg-ink-900 text-cream-100 lg:flex">
@@ -202,7 +214,7 @@ export function Sidebar({
         </div>
       </aside>
 
-      {/* Mobile shell */}
+      {/* Mobile shell: compact header + fixed bottom tab bar */}
       <header className="no-print sticky top-0 z-30 bg-ink-900 text-cream-100 lg:hidden">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2.5">
@@ -215,33 +227,59 @@ export function Sidebar({
           <form action={signOutAction}>
             <button
               type="submit"
-              className="rounded-lg px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-cream-100/75"
+              className="rounded-full bg-ink-800 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-cream-100/80"
             >
               Sign out
             </button>
           </form>
         </div>
-        <nav className="overflow-x-auto border-t border-ink-800">
-          <ul className="flex min-w-max gap-1 px-3 py-2">
-            {items.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-2 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-medium transition",
-                    isActive(item)
-                      ? "bg-gold-500 text-ink-900"
-                      : "text-cream-100/75 hover:bg-ink-800",
-                  )}
-                >
-                  <Icon name={item.icon} />
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {overflow.length > 0 ? (
+          <nav className="no-print overflow-x-auto border-t border-ink-800">
+            <ul className="flex min-w-max gap-1 px-3 py-2">
+              {overflow.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium transition",
+                      isActive(item)
+                        ? "bg-gold-500 text-ink-900"
+                        : "text-cream-100/75 hover:bg-ink-800",
+                    )}
+                  >
+                    <Icon name={item.icon} />
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ) : null}
       </header>
+
+      <nav
+        aria-label="Primary"
+        className="no-print fixed inset-x-0 bottom-0 z-40 border-t border-ink-800 bg-ink-900/97 text-cream-100 backdrop-blur lg:hidden"
+        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      >
+        <ul className="mx-auto flex max-w-lg items-stretch justify-between px-2 py-1.5">
+          {primary.map((item) => (
+            <li key={item.href} className="flex-1">
+              <Link
+                href={item.href}
+                aria-current={isActive(item) ? "page" : undefined}
+                className={cn(
+                  "flex flex-col items-center gap-1 rounded-2xl px-1 py-2 text-[10px] font-medium transition",
+                  isActive(item) ? "bg-gold-500 text-ink-900" : "text-cream-100/70",
+                )}
+              >
+                <Icon name={item.icon} />
+                <span className="max-w-full truncate">{item.label}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </>
   );
 }

@@ -21,8 +21,8 @@ const METHOD_HINTS: Record<PaymentMethod, string> = {
 const radioCard =
   "flex cursor-pointer items-start gap-3 rounded-xl bg-white px-4 py-3 ring-1 ring-cream-300 transition has-[:checked]:bg-cream-100 has-[:checked]:ring-2 has-[:checked]:ring-forest-600";
 
-export function PaymentsSection({ user }: { user: User }) {
-  const db = readDb();
+export async function PaymentsSection({ user }: { user: User }) {
+  const db = await readDb();
   const semester = semesterNow();
   const allocation = activeAllocation(db, user.id, semester);
   const myPayments = db.payments
@@ -229,8 +229,8 @@ export function PaymentsSection({ user }: { user: User }) {
 
 /* ------------------------------------------------------------ admin view */
 
-export function PaymentsAdminSection() {
-  const db = readDb();
+export async function PaymentsAdminSection() {
+  const db = await readDb();
   const rows = [...db.payments]
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     .slice(0, 40);

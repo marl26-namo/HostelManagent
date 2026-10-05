@@ -1,7 +1,8 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { readDb } from "./db";
+import { readDb, usingPostgres } from "./db";
+import { findUserById } from "./db/store";
 import { hashPassword } from "./password";
 import type { Role, User } from "./types";
 
@@ -57,7 +58,9 @@ export async function getSessionUser(): Promise<User | null> {
     const { userId } = JSON.parse(Buffer.from(payload, "base64url").toString("utf8")) as {
       userId: string;
     };
-    const db = readDb();
+    // Postgres lookups hit the primary-key index instead of hydrating every table.
+    if (usingPostgres()) return await findUserById(userId);
+    const db = await readDb();
     return db.users.find((u) => u.id === userId) ?? null;
   } catch {
     return null;
